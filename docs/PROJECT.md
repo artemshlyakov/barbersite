@@ -30,3 +30,7 @@ Actual services/prices, business hours, approved bio text, work photos, formal a
 
 ## Guardrails
 No fake customer testimonials, fabricated facts, or unlicensed portfolio photos represented as Habib's work. GitHub Pages used only as a temporary demonstration platform, not long-term business hosting. Prefer legitimate local SEO and a fast accessible experience.
+
+
+## Visual design decision (12 Nov 2026)
+The initial assistant-produced demo was approved as the stronger creative direction. The first Codex-developed V1 was rejected by the owner on visual grounds. The current `index.html` and `styles.css` restore the preferred bold, condensed, editorial dark/bronze look, while adding confirmed contact/location details and bilingual content. Future work should refine this design rather than replace it with a generic minimalist layout.
