@@ -26,3 +26,11 @@ We are creating a **real commercial website** for Habib, an independent professi
 - GitHub Pages is for **review-only demo**; long-term commercial hosting will be selected separately.
 - Work in a branch with a PR, unless the repo owner asks for another workflow. The owner reviews before merge/public launch.
 - Document decisions and actual test results honestly; you have freedom to pick implementation details.
+
+
+## Current approved visual baseline (12 Nov 2026)
+The owner strongly preferred the **original HABIB BARBER demo**, with bold condensed uppercase typography, dramatic dark portrait, warm bronze accents, punchy editorial sections, a three-column portfolio composition, and strong CTA. An alternate restrained Codex design was rejected.
+
+The actual Pages source is now the root `index.html`, `en/index.html`, `styles.css`, `script.js` and the real portrait in `public/images/`. Preserve the direction and improve it thoughtfully. Do **not** reintroduce the discarded layout without discussing it with the owner. Continue to exercise engineering creativity *within the agreed art direction*.
+
+Deployment: GitHub Pages publishes from the main branch root. The workflow validates the static site and tests the real URL; do not replace it with an uncoordinated build artifact deployment. Both preview locales remain noindex until commercial hosting and final content are approved.
