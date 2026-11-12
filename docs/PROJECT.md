@@ -1,27 +1,32 @@
-# HABIB BARBER — project brief
+# HABIB BARBER — product context
 
-**Status:** V1 design prototype (not production).
+**Goal:** launch a distinct, professional online presence for Habib, one independent barber in Vladimir. We are making a real customer-facing product and will first review an attractive no-booking prototype.
 
-## Product
-Single independent professional barber with his own workspace. One landing page presenting Habib, his approach, examples of work, services, prices, contacts and a Yandex Map. Visual reference: marrielbarber.com, interpreted into original dark premium style with warm accents and mobile-first experience.
+## Vision
+Personal branding, beautiful imagery, practical appointment/contact entry points, craftsmanship and trust. Design inspiration: https://marrielbarber.com/; preference for premium dark minimalism and warm accents, but the engineering/design agent has freedom to recommend a better solution.
 
-## Provided
-Real photo of Habib (640×640). GitHub repository: artemshlyakov/barbersite.
+## Confirmed
+- Working brand label: HABIB BARBER (may be adjusted before production).
+- One professional barber, Vladimir.
+- Photo supplied by the owner: `public/images/habib-portrait.webp`.
+- Phone: +7 904 033 9177 (`tel:+79040339177`).
+- Telegram DM: https://t.me/khabiBarber
+- Telegram channel: https://t.me/khabiBarber13
+- Coordinates: lat 56.145343; lon 40.421006.
+- Entrance near cafe «Юность». Exact postal address requires verification.
 
-## Missing and therefore NOT to be invented
-- Phone and Telegram handle.
-- Exact address and map location.
-- Hours, service list and prices.
-- Actual portfolio photos, public-use permissions.
-- Approved biography and brand copy.
+## To be supplied later
+Actual services/prices, business hours, approved bio text, work photos, formal address, booking preference.
 
 ## Milestones
-1. V1 static site, contact CTAs once details received, no database.
-2. V2 use DIKIDI widget/link for appointments and DIKIDI Business for manual entries and calendar. Verify free-plan limits and actual flow first.
-3. V3 Telegram bot only if the owner decides it is needed.
+1. **V1:** attractive, polished, responsive static landing with RU/EN, services/portfolio placeholders where needed, portrait, map, contacts and local SEO fundamentals. Website CTAs lead to direct contact until booking exists.
+2. **V2:** evaluate DIKIDI online appointments, calendar and manual appointment entries from calls/Telegram; avoid reinventing a scheduling system when a reliable service works.
+3. **V3:** Telegram bot if Habib approves the need.
 
-## Delivery
-GitHub Pages only for private client review in spirit (the repo itself is public, so do not upload sensitive content). Real commercial site later requires appropriate hosting and domain. No false booking form, fake prices, fake reviews, or misleading sample haircut images.
+## Team workflow
+- Product priorities are agreed by the owner and ChatGPT.
+- Codex acts as lead implementing developer with creative and architecture freedom; encourage thoughtful proposals and alternatives.
+- Significant changes go to a PR with a plain-language summary and tests, then are reviewed by the owner.
 
-## Coding
-For V1 prefer simple static pages, structured content and clean responsive CSS. React/server/database are unnecessary. Aim for production-grade semantics, responsive behavior, accessibility and optimization. Keep README and docs updated. Work through reviewable PRs for substantial changes.
+## Guardrails
+No fake customer testimonials, fabricated facts, or unlicensed portfolio photos represented as Habib's work. GitHub Pages used only as a temporary demonstration platform, not long-term business hosting. Prefer legitimate local SEO and a fast accessible experience.
