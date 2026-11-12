@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
   pages: write
   id-token: write
 
@@ -45,6 +45,32 @@ jobs:
         uses: actions/upload-pages-artifact@v3
         with:
           path: ./dist
+      # Temporary compatibility: the repository's Pages source is currently
+      # "Deploy from a branch: main / (root)". Keep that source functional,
+      # without requiring the repo owner to change settings manually.
+      # When Source is switched to "GitHub Actions", remove this sync step.
+      - name: Sync built HTML to branch-based Pages root
+        if: github.event_name != 'pull_request'
+        run: |
+          mkdir -p en assets images
+          cp dist/index.html index.html
+          cp dist/en/index.html en/index.html
+          cp dist/favicon.svg favicon.svg
+          cp dist/robots.txt robots.txt
+          cp -R dist/assets/. assets/
+          cp -R dist/images/. images/
+          touch .nojekyll
+          git add index.html en/index.html favicon.svg robots.txt assets images .nojekyll
+          if ! git diff --cached --quiet; then
+            git -c user.name='github-actions[bot]' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'chore: sync GitHub Pages preview assets [skip ci]'
+            git push origin HEAD:main
+          fi
+      - name: Request refresh of branch-based Pages
+        if: github.event_name != 'pull_request'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh api --method POST "repos/${GITHUB_REPOSITORY}/pages/builds" || echo 'Branch refresh not supported; Actions deploy will still run.'
 
   deploy:
     if: github.event_name != 'pull_request'
@@ -57,3 +83,28 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+
+  smoke-test:
+    if: github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    needs: deploy
+    steps:
+      - name: Verify real public pages (not README)
+        run: |
+          set -eu
+          base="https://artemshlyakov.github.io/barbersite"
+          for attempt in $(seq 1 15); do
+            curl -fLsS --max-time 20 "${base}/" -o /tmp/habib-ru.html || true
+            curl -fLsS --max-time 20 "${base}/en/" -o /tmp/habib-en.html || true
+            if grep -q 'lang="ru"' /tmp/habib-ru.html 2>/dev/null \
+              && grep -q 'Стиль начинается' /tmp/habib-ru.html 2>/dev/null \
+              && grep -q 'lang="en"' /tmp/habib-en.html 2>/dev/null \
+              && grep -q 'Style starts' /tmp/habib-en.html 2>/dev/null; then
+              echo "Verified real Russian and English pages are served publicly."
+              exit 0
+            fi
+            echo "Attempt ${attempt}: published pages have not propagated yet."
+            sleep 10
+          done
+          echo "::error::Public URL is not serving the built RU/EN website."
+          exit 1
