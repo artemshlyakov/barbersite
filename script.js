@@ -31,3 +31,38 @@ if (toggle && nav) {
 
 const year = document.querySelector('#year');
 if (year) year.textContent = String(new Date().getFullYear());
+
+const mapElement = document.querySelector('[data-map]');
+if (mapElement && window.L) {
+  const showMap = () => {
+    mapElement.querySelector('.map-fallback')?.remove();
+    const point = [56.145343, 40.421006];
+    const map = L.map(mapElement, {
+      zoomControl: false,
+      scrollWheelZoom: false,
+      attributionControl: false
+    }).setView(point, 16);
+
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+      attribution: '© <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap contributors</a>'
+    }).addTo(map);
+    L.marker(point, {
+      icon: L.divIcon({ className: 'map-pin', html: '<span aria-hidden="true"></span>', iconSize: [30, 39], iconAnchor: [15, 39] }),
+      keyboard: false
+    }).addTo(map);
+    L.control.zoom({ position: 'topright' }).addTo(map);
+    L.control.attribution({ position: 'bottomright', prefix: false }).addTo(map);
+  };
+
+  if ('IntersectionObserver' in window) {
+    const observer = new IntersectionObserver((entries) => {
+      if (!entries.some((entry) => entry.isIntersecting)) return;
+      observer.disconnect();
+      showMap();
+    }, { rootMargin: '300px' });
+    observer.observe(mapElement);
+  } else {
+    showMap();
+  }
+}
