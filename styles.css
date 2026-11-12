@@ -294,3 +294,33 @@ h1 em,h2 em,.quote-inner em{font-style:normal;color:var(--accent)}
 @media(max-width:360px){.contact-inner h2{font-size:42px}
 .mobile-booking{font-size:10px}
 }
+
+/* Primary contact actions: one warm filled card and one dark outlined card. */
+.contact-links{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;border:0;margin-top:44px}
+.contact-link{display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-rows:auto 1fr;align-items:start;gap:12px;min-height:144px;padding:22px 24px;border:1px solid var(--accent);background:var(--accent);color:#171510;transition:transform .2s ease,background .2s ease,border-color .2s ease}
+.contact-link:hover{transform:translateY(-3px);background:#dfbb87}
+.contact-link span:first-child{grid-column:1;grid-row:1;color:#352616;font-size:11px;letter-spacing:.1em}
+.contact-link strong{grid-column:1 / -1;grid-row:2;align-self:end;color:#171510;font-family:var(--font-display);font-size:clamp(25px,2.7vw,36px);font-weight:600;line-height:1.1;overflow-wrap:anywhere}
+.contact-link span:last-child{grid-column:2;grid-row:1;color:#171510;font-size:21px;line-height:1}
+.contact-link:nth-child(2){background:#27231c;border-color:#917853;color:var(--text)}
+.contact-link:nth-child(2):hover{background:#342c22;border-color:var(--accent)}
+.contact-link:nth-child(2) span:first-child,.contact-link:nth-child(2) span:last-child{color:var(--accent)}
+.contact-link:nth-child(2) strong{color:var(--text)}
+@media(max-width:620px){
+  .contact-links{grid-template-columns:1fr;gap:12px}
+  .contact-link{min-height:112px;padding:18px 20px}
+  .contact-link strong{font-size:30px}
+}
+@media(max-width:360px){.contact-link strong{font-size:27px}}
+
+/* Locally rendered OpenStreetMap tiles keep the map free of provider overlays. */
+.map-live{position:relative;z-index:0}
+.map-fallback{display:flex;align-items:center;justify-content:center;width:100%;height:100%;padding:20px;text-align:center;color:var(--accent);font-size:12px;font-weight:800}
+.map-live .leaflet-control-attribution{background:rgba(22,21,18,.88);color:#eee8dd;padding:4px 7px;font:11px/1.35 var(--font-main)}
+.map-live .leaflet-control-attribution a{color:#f1c78f;text-decoration:underline}
+.map-live .leaflet-control-zoom{border:1px solid #5b4a34;box-shadow:0 3px 12px #0005}
+.map-live .leaflet-control-zoom a{background:#27231c;color:#e7c08a;border-bottom-color:#5b4a34}
+.map-live .leaflet-control-zoom a:hover,.map-live .leaflet-control-zoom a:focus{background:#3b3226;color:#fff}
+.map-pin{width:30px;height:39px}
+.map-pin span{display:block;position:relative;width:30px;height:30px;background:#bf9560;border:3px solid #241e16;border-radius:50% 50% 50% 0;transform:rotate(-45deg);box-shadow:0 3px 12px #0008}
+.map-pin span::after{content:'';position:absolute;left:8px;top:8px;width:8px;height:8px;background:#241e16;border-radius:50%}
