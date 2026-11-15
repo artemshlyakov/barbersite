@@ -66,3 +66,60 @@ if (mapElement && window.L) {
     showMap();
   }
 }
+
+
+/* Heritage polish: subtle on-scroll reveal and price counting; no dependencies. */
+(() => {
+  const reduced = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false;
+  const figures = [...document.querySelectorAll('[data-count]')];
+  const shown = (n) => new Intl.NumberFormat('ru-RU').format(n);
+  const count = (el) => {
+    if (el.dataset.done) return;
+    el.dataset.done = '1';
+    const end = Number(el.dataset.count);
+    if (!Number.isFinite(end) || reduced) { el.textContent = shown(end); return; }
+    const start = performance.now();
+    const step = (now) => {
+      const progress = Math.min(1, (now - start) / 750);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      el.textContent = shown(Math.round(end * eased));
+      if (progress < 1) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+  };
+  if ('IntersectionObserver' in window) {
+    const observer = new IntersectionObserver((entries, control) => {
+      for (const entry of entries) if (entry.isIntersecting) {
+        control.unobserve(entry.target);
+        count(entry.target);
+      }
+    }, { threshold: 0.1 });
+    figures.forEach(el => observer.observe(el));
+  } else figures.forEach(count);
+
+  if (!reduced && 'IntersectionObserver' in window) {
+    const elements = [...document.querySelectorAll('[data-reveal]')];
+    const observer = new IntersectionObserver((entries, control) => {
+      for (const entry of entries) if (entry.isIntersecting) {
+        entry.target.classList.add('is-visible');
+        control.unobserve(entry.target);
+      }
+    }, { threshold: 0.03, rootMargin: '0px 0px -20px 0px' });
+    elements.forEach(el => observer.observe(el));
+    document.documentElement.classList.add('heritage-motion');
+  }
+  if (!reduced) {
+    document.querySelectorAll('.button-primary,.header-cta,.mobile-booking').forEach((el) => {
+      el.addEventListener('pointerdown', (event) => {
+        if (event.button !== 0) return;
+        const rect = el.getBoundingClientRect();
+        const pulse = document.createElement('span');
+        pulse.className = 'quiet-pulse';
+        pulse.style.left = (event.clientX - rect.left) + 'px';
+        pulse.style.top = (event.clientY - rect.top) + 'px';
+        el.append(pulse);
+        pulse.addEventListener('animationend', () => pulse.remove(), { once: true });
+      });
+    });
+  }
+})();
