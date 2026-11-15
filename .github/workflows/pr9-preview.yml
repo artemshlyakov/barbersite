@@ -1,0 +1,40 @@
+name: Publish PR 9 preview files
+
+on:
+  push:
+    branches: [feat/heritage-refinement]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: pr9-preview-files
+  cancel-in-progress: true
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Build noindex preview
+        run: |
+          npm run build
+          grep -q 'noindex, nofollow' dist/index.html
+          grep -q 'noindex, nofollow' dist/en/index.html
+          grep -q 'Disallow: /' dist/robots.txt
+      - name: Update isolated Pages directory
+        run: |
+          git fetch origin preview-pages:refs/remotes/origin/preview-pages
+          git worktree add --detach ../preview-pages origin/preview-pages
+          mkdir -p ../preview-pages/pr-9
+          rsync -a --delete dist/ ../preview-pages/pr-9/
+          git -C ../preview-pages add pr-9
+          if ! git -C ../preview-pages diff --cached --quiet; then
+            git -C ../preview-pages config user.name 'github-actions[bot]'
+            git -C ../preview-pages config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+            git -C ../preview-pages commit -m "Update PR 9 preview from $GITHUB_SHA"
+            git -C ../preview-pages push origin HEAD:preview-pages
+          fi
