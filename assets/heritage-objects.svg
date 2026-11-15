@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 840 580" role="img" aria-labelledby="title desc">
+<title id="title">Атмосфера старой цирюльни</title>
+<desc id="desc">Стилизованный натюрморт с зелёным аптекарским флаконом, помазком и складной бритвой на тёмном фоне.</desc>
+<defs>
+  <radialGradient id="bg" cx=".55" cy=".48" r=".75"><stop stop-color="#444131"/><stop offset=".57" stop-color="#292a23"/><stop offset="1" stop-color="#141814"/></radialGradient>
+  <linearGradient id="bottle" x1="0" y1="0" x2="1" y2="0"><stop stop-color="#092923"/><stop offset=".17" stop-color="#285546"/><stop offset=".39" stop-color="#163d33"/><stop offset=".68" stop-color="#0d2c28"/><stop offset=".9" stop-color="#265247"/><stop offset="1" stop-color="#061b17"/></linearGradient>
+  <linearGradient id="glassshine"><stop stop-color="#a4c3a2" stop-opacity=".52"/><stop offset=".15" stop-color="#fff" stop-opacity=".12"/><stop offset=".44" stop-color="#fff" stop-opacity=".015"/><stop offset="1" stop-color="#fff" stop-opacity=".10"/></linearGradient>
+  <linearGradient id="brass" x1="0" y1="0" x2="1" y2="0"><stop stop-color="#47321d"/><stop offset=".16" stop-color="#d5b881"/><stop offset=".4" stop-color="#765a32"/><stop offset=".7" stop-color="#bb985f"/><stop offset="1" stop-color="#372a19"/></linearGradient>
+  <linearGradient id="razor" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#d1c3a8"/><stop offset=".3" stop-color="#7e8075"/><stop offset=".62" stop-color="#2e3431"/><stop offset="1" stop-color="#191e1b"/></linearGradient>
+  <linearGradient id="bristles" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#2c241c"/><stop offset=".52" stop-color="#a88d66"/><stop offset="1" stop-color="#d5c2a0"/></linearGradient>
+  <filter id="shadow"><feGaussianBlur stdDeviation="18"/></filter>
+  <filter id="glow"><feGaussianBlur stdDeviation="5"/></filter>
+  <pattern id="grain" width="6" height="6" patternUnits="userSpaceOnUse"><circle cx="1" cy="1" r=".5" fill="#e9d1a9" opacity=".07"/><circle cx="4" cy="3" r=".4" fill="#050908" opacity=".2"/></pattern>
+</defs>
+<rect width="840" height="580" fill="url(#bg)"/>
+<rect width="840" height="580" fill="url(#grain)"/>
+<path d="M0 502H840" stroke="#9c7d50" opacity=".25"/><path d="M0 505H840" stroke="#000" opacity=".4"/>
+<ellipse cx="443" cy="505" rx="283" ry="35" fill="#050707" opacity=".72" filter="url(#shadow)"/>
+<g opacity=".3" stroke="#b99d69" stroke-width="1"><path d="M47 51h63M47 51v38"/><path d="M793 52h-63M793 52v38"/><path d="M48 532h65M48 532v-37"/><path d="M792 532h-65M792 532v-37"/></g>
+<!-- folded straight razor behind glass -->
+<g transform="translate(0 10) rotate(-13 595 403)">
+ <path d="M532 430Q599 408 716 425Q737 430 752 452Q717 462 624 462L533 449Z" fill="#211b14" stroke="#aa8b55" stroke-width="4"/>
+ <path d="M565 413Q605 372 735 391L756 409Q678 405 604 439L573 439Z" fill="url(#razor)" stroke="#aaa18e" stroke-width="2"/>
+ <path d="M610 401Q687 386 730 401" fill="none" stroke="#f7edd5" opacity=".6" stroke-width="3"/>
+ <circle cx="560" cy="435" r="10" fill="url(#brass)" stroke="#261b13" stroke-width="2"/><circle cx="560" cy="435" r="3" fill="#32291c"/>
+</g>
+<!-- shaving brush left -->
+<g>
+ <ellipse cx="247" cy="495" rx="77" ry="16" fill="#050909" opacity=".4"/>
+ <path d="M211 440Q204 460 211 475Q223 493 252 490Q279 487 288 474L284 441Z" fill="#463322" stroke="#a78552" stroke-width="2"/>
+ <path d="M207 440Q210 428 224 425H276Q288 430 286 440Z" fill="url(#brass)"/>
+ <path d="M226 417Q218 390 220 362H275Q284 401 269 419Z" fill="#32271f" stroke="#b68b54" stroke-width="2"/>
+ <rect x="216" y="413" width="68" height="17" rx="6" fill="url(#brass)"/>
+ <path d="M221 365C190 322 204 267 221 233C231 213 266 210 280 231C306 274 316 321 274 365Z" fill="url(#bristles)"/>
+ <path d="M219 354C199 308 212 261 222 239M239 354C229 314 232 263 237 224M257 353C265 318 262 253 260 225M274 354C297 312 284 268 278 243" stroke="#ead7aa" opacity=".38" stroke-width="3" fill="none"/>
+ <path d="M217 362Q251 367 282 361L279 383H223Z" fill="url(#brass)"/>
+ <path d="M224 470Q249 478 273 467" stroke="#c1a475" opacity=".5" stroke-width="2" fill="none"/>
+</g>
+<!-- central old green tonic bottle -->
+<g>
+ <ellipse cx="457" cy="499" rx="120" ry="16" fill="#050909" opacity=".7"/>
+ <rect x="428" y="90" width="59" height="54" rx="7" fill="url(#brass)"/>
+ <path d="M426 99H489M426 112H489M426 125H489" stroke="#e2be7b" stroke-width="2" opacity=".58"/>
+ <rect x="427" y="141" width="61" height="54" rx="9" fill="url(#bottle)" stroke="#6b8068" stroke-width="2"/>
+ <path d="M407 188Q425 181 425 172H491Q491 183 507 188C543 199 552 217 552 251V447Q552 478 522 486H389Q360 478 360 447V251C360 218 372 199 407 188Z" fill="url(#bottle)" stroke="#64846b" stroke-width="3"/>
+ <path d="M404 199Q376 215 374 253V449Q376 469 391 475" stroke="#c0d5b7" opacity=".45" stroke-width="8" fill="none" stroke-linecap="round"/>
+ <path d="M525 229Q534 251 534 293V440" stroke="#a3c4a5" opacity=".25" stroke-width="5" fill="none"/>
+ <path d="M407 188Q426 200 456 202Q488 201 507 188" stroke="#a3b99b" opacity=".3" stroke-width="3" fill="none"/>
+ <rect x="379" y="276" width="154" height="148" rx="4" fill="#d0c4a3" stroke="#bba37b" stroke-width="3"/>
+ <path d="M391 289H521V411H391Z" fill="#c8bb98" stroke="#817451" stroke-width="1"/>
+ <path d="M408 316H503M408 394H503" stroke="#514832" stroke-width="1.2" opacity=".75"/>
+ <text x="456" y="309" fill="#363528" font-size="12" font-family="Georgia,serif" letter-spacing="3" text-anchor="middle">PRIVATE BARBER</text>
+ <text x="456" y="359" fill="#222c25" font-size="42" font-family="Georgia,serif" font-weight="bold" text-anchor="middle">H/</text>
+ <text x="456" y="381" fill="#2c352d" font-size="12" font-family="Georgia,serif" letter-spacing="2.2" text-anchor="middle">GROOMING</text>
+ <text x="456" y="403" fill="#393729" font-size="8" font-family="Georgia,serif" letter-spacing="2" text-anchor="middle">VLADIMIR</text>
+ <path d="M403 234Q456 219 513 235" stroke="#a5ccb3" opacity=".2" stroke-width="2" fill="none"/>
+ <path d="M391 468Q455 480 519 469" stroke="#b6c0a2" opacity=".27" stroke-width="5" fill="none"/>
+</g>
+<!-- loose brass comb, small -->
+<g transform="rotate(8 620 485)" opacity=".86">
+ <rect x="541" y="474" width="220" height="13" rx="4" fill="#32271e" stroke="#a88c5b" stroke-width="2"/>
+ <g stroke="#a88c5b" stroke-width="3"><path d="M560 487v18M575 487v18M590 487v18M605 487v18M620 487v18M635 487v18M650 487v18M665 487v18M680 487v18M695 487v18M710 487v18M725 487v18M740 487v18"/></g>
+</g>
+<path d="M36 546H803" stroke="#c4a06c" opacity=".16"/>
+</svg>
