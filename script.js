@@ -66,3 +66,67 @@ if (mapElement && window.L) {
     showMap();
   }
 }
+
+/* Restrained motion: reveal, number count and small ink response on booking CTAs. */
+(() => {
+  const reduceMotion = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false;
+  const formatPrice = (n) => new Intl.NumberFormat('ru-RU').format(n);
+  const animatePrice = (element) => {
+    if (element.dataset.animated === 'true') return;
+    element.dataset.animated = 'true';
+    const target = Number(element.dataset.count || 0);
+    if (reduceMotion || !Number.isFinite(target)) {
+      element.textContent = formatPrice(target);
+      return;
+    }
+    const start = performance.now();
+    const duration = 900;
+    const tick = (now) => {
+      const p = Math.min((now - start) / duration, 1);
+      const eased = 1 - Math.pow(1 - p, 3);
+      element.textContent = formatPrice(Math.round(eased * target));
+      if (p < 1) requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
+  };
+  const counters = [...document.querySelectorAll('[data-count]')];
+  if ('IntersectionObserver' in window) {
+    const counterObserver = new IntersectionObserver((entries, observer) => {
+      for (const entry of entries) {
+        if (!entry.isIntersecting) continue;
+        observer.unobserve(entry.target);
+        animatePrice(entry.target);
+      }
+    }, { threshold: 0.35 });
+    counters.forEach((el) => counterObserver.observe(el));
+  } else {
+    counters.forEach(animatePrice);
+  }
+  if (!reduceMotion && 'IntersectionObserver' in window) {
+    document.documentElement.classList.add('has-motion');
+    const revealObserver = new IntersectionObserver((entries, observer) => {
+      for (const entry of entries) {
+        if (!entry.isIntersecting) continue;
+        entry.target.classList.add('is-visible');
+        observer.unobserve(entry.target);
+      }
+    }, { threshold: 0.08, rootMargin: '0px 0px -22px 0px' });
+    document.querySelectorAll('[data-reveal]').forEach((el) => revealObserver.observe(el));
+  }
+  if (!reduceMotion) {
+    document.querySelectorAll('.button,.header-cta,.mobile-booking').forEach((element) => {
+      element.addEventListener('pointerdown', (event) => {
+        if (event.button !== 0) return;
+        const rect = element.getBoundingClientRect();
+        const ink = document.createElement('span');
+        ink.className = 'ink-splash';
+        const diameter = Math.max(rect.width, rect.height) * 2.4;
+        ink.style.width = diameter + 'px';
+        ink.style.left = event.clientX - rect.left + 'px';
+        ink.style.top = event.clientY - rect.top + 'px';
+        element.append(ink);
+        ink.addEventListener('animationend', () => ink.remove(), { once: true });
+      });
+    });
+  }
+})();
