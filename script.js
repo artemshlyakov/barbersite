@@ -53,6 +53,48 @@ if ('IntersectionObserver' in window && !reducedMotion.matches && revealItems.le
   revealItems.forEach((item) => revealObserver.observe(item));
 }
 
+// The HTML contains the final prices, so they stay correct without JavaScript or motion.
+const priceList = document.querySelector('.price-list');
+const priceCounters = [...document.querySelectorAll('[data-price-count]')]
+  .map((element) => ({
+    element,
+    target: Number(element.dataset.priceCount),
+    finalText: element.textContent.trim()
+  }))
+  .filter(({ target }) => Number.isFinite(target) && target >= 0);
+
+if (priceList && priceCounters.length && 'IntersectionObserver' in window && !reducedMotion.matches) {
+  const formatter = new Intl.NumberFormat(isEnglish ? 'en-US' : 'ru-RU', {
+    maximumFractionDigits: 0
+  });
+  const duration = 850;
+  const countObserver = new IntersectionObserver(([entry]) => {
+    if (!entry.isIntersecting) return;
+    countObserver.disconnect();
+
+    const start = performance.now();
+    const suffix = (text) => text.match(/\s*₽\s*$/)?.[0] || '';
+    const counters = priceCounters.map((counter) => ({
+      ...counter,
+      suffix: suffix(counter.finalText)
+    }));
+
+    const step = (now) => {
+      const progress = reducedMotion.matches ? 1 : Math.min((now - start) / duration, 1);
+      const eased = 1 - (1 - progress) ** 3;
+      for (const { element, target, finalText, suffix: unit } of counters) {
+        element.textContent = progress === 1
+          ? finalText
+          : `${formatter.format(Math.round(target * eased))}${unit}`;
+      }
+      if (progress < 1) requestAnimationFrame(step);
+    };
+
+    requestAnimationFrame(step);
+  }, { threshold: 0.3 });
+  countObserver.observe(priceList);
+}
+
 const lightbox = document.querySelector('.lightbox');
 if (lightbox) {
   const lightboxImage = lightbox.querySelector('img');
