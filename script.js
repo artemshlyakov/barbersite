@@ -67,7 +67,7 @@ if (priceList && priceCounters.length && 'IntersectionObserver' in window && !re
   const formatter = new Intl.NumberFormat(isEnglish ? 'en-US' : 'ru-RU', {
     maximumFractionDigits: 0
   });
-  const duration = 850;
+  const duration = 1400;
   const countObserver = new IntersectionObserver(([entry]) => {
     if (!entry.isIntersecting) return;
     countObserver.disconnect();
