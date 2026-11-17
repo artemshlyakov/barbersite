@@ -125,3 +125,38 @@ a,button{touch-action:manipulation}h1,h2,h3{text-wrap:balance}.price-row strong{
 
 /* Scroll reveals support the content without calling attention to themselves. */
 .js-motion [data-reveal]{transform:translateY(12px);transition-duration:.7s}
+
+/* About: story and portrait share a row; the three actions sit underneath. */
+.about-grid{grid-template-areas:'copy photo' 'links links';grid-template-columns:minmax(0,1fr) minmax(220px,320px);column-gap:clamp(28px,5vw,70px);row-gap:28px;align-items:center;max-width:1060px}
+.about-copy{grid-area:copy}
+.about-photo-wrap{grid-area:photo;width:100%;max-width:320px;margin:0 10px 0 0;aspect-ratio:3/4;align-self:center}
+.about-photo-wrap img{height:100%;aspect-ratio:3/4;object-fit:cover;object-position:center 42%}
+.about-photo-wrap::before{inset:12px -11px -11px 11px}
+.about-sticker{left:-27px;top:-14px;bottom:auto}
+.about-links{grid-area:links;margin-top:0}
+@media(max-width:850px){
+  .about-grid{grid-template-areas:'copy photo' 'links links';grid-template-columns:minmax(0,1fr) minmax(190px,260px);column-gap:clamp(20px,4vw,38px);row-gap:24px}
+  .about-photo-wrap{width:100%;margin:0 8px 0 0}
+}
+@media(max-width:650px){
+  .about-section.section-pad{padding-block:48px 58px}
+  .about-grid{grid-template-areas:'copy photo' 'links links';grid-template-columns:minmax(0,1fr) minmax(0,1fr);column-gap:13px;row-gap:18px;align-items:start}
+  .about-copy .section-label{display:none}
+  .about-copy h2{font-size:clamp(27px,8.2vw,38px);line-height:1.02;margin-bottom:15px}
+  .about-rule{width:39px;margin-bottom:18px}
+  .about-copy>p:not(.section-label){font-size:clamp(11px,3.1vw,13px);line-height:1.45}
+  .about-copy>p+p{margin-top:13px}
+  .about-photo-wrap{width:100%;max-width:none;margin:0 6px 0 0;aspect-ratio:3/4;align-self:start}
+  .about-photo-wrap img{height:100%;aspect-ratio:3/4;object-position:center 37%}
+  .about-photo-wrap::before{inset:0 -6px -6px 6px}
+  .about-sticker{width:56px;height:56px;left:-15px;top:-12px}
+  .about-links{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+  .about-link{min-width:0;padding:9px 5px;gap:5px;font-size:11px;white-space:nowrap}
+  .contact-icon{width:16px;height:16px}
+}
+@media(max-width:350px){
+  .about-grid{column-gap:10px}
+  .about-copy h2{font-size:25px}
+  .about-copy>p:not(.section-label){font-size:12px;line-height:1.4}
+  .about-link{font-size:10px}
+}
