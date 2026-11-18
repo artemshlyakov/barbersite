@@ -95,31 +95,6 @@ if (priceList && priceCounters.length && 'IntersectionObserver' in window && !re
   countObserver.observe(priceList);
 }
 
-// Keep the gallery's clipper slider in sync with touch, wheel and keyboard scrolling.
-const galleryRail = document.querySelector('.gallery-grid');
-const galleryProgress = document.querySelector('.gallery-progress');
-if (galleryRail && galleryProgress) {
-  const slider = galleryProgress.querySelector('.gallery-progress-range');
-  const clipper = galleryProgress.querySelector('.gallery-progress-icon');
-  const syncGalleryProgress = () => {
-    const maxScroll = galleryRail.scrollWidth - galleryRail.clientWidth;
-    const active = maxScroll > 1;
-    galleryProgress.hidden = !active;
-    document.documentElement.classList.toggle('has-gallery-progress', active);
-    if (!active) return;
-    const ratio = Math.min(1, Math.max(0, galleryRail.scrollLeft / maxScroll));
-    slider.value = String(Math.round(ratio * 100));
-    clipper.style.left = `${18 + ratio * (galleryProgress.clientWidth - 36)}px`;
-  };
-  slider.addEventListener('input', () => {
-    galleryRail.scrollLeft = (galleryRail.scrollWidth - galleryRail.clientWidth) * Number(slider.value) / 100;
-    syncGalleryProgress();
-  });
-  galleryRail.addEventListener('scroll', syncGalleryProgress, { passive: true });
-  window.addEventListener('resize', syncGalleryProgress);
-  syncGalleryProgress();
-}
-
 const lightbox = document.querySelector('.lightbox');
 if (lightbox) {
   const lightboxImage = lightbox.querySelector('img');
