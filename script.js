@@ -95,6 +95,58 @@ if (priceList && priceCounters.length && 'IntersectionObserver' in window && !re
   countObserver.observe(priceList);
 }
 
+const galleryRail = document.querySelector('.gallery-grid');
+if (galleryRail) {
+  const control = document.createElement('div');
+  control.className = 'gallery-control';
+  control.innerHTML = `<button class="gallery-arrow gallery-arrow-prev" type="button" aria-label="${isEnglish ? 'Previous works' : 'Предыдущие работы'}"></button><div class="gallery-track"><img class="gallery-clipper" src="${isEnglish ? '../' : './'}assets/icons/gallery-clipper.svg" alt="" draggable="false"></div><button class="gallery-arrow gallery-arrow-next" type="button" aria-label="${isEnglish ? 'Next works' : 'Следующие работы'}"></button>`;
+  galleryRail.after(control);
+  document.documentElement.classList.add('has-gallery-control');
+  const track = control.querySelector('.gallery-track');
+  const clipper = control.querySelector('.gallery-clipper');
+  const prev = control.querySelector('.gallery-arrow-prev');
+  const next = control.querySelector('.gallery-arrow-next');
+  const maxScroll = () => Math.max(0, galleryRail.scrollWidth - galleryRail.clientWidth);
+  const update = () => {
+    const max = maxScroll();
+    const travel = Math.max(0, track.clientWidth - clipper.clientWidth);
+    const progress = max ? Math.min(1, Math.max(0, galleryRail.scrollLeft / max)) : 0;
+    clipper.style.left = `${progress * travel}px`;
+    control.hidden = max === 0;
+    prev.disabled = progress <= 0.001;
+    next.disabled = progress >= 0.999;
+  };
+  const step = () => {
+    const item = galleryRail.querySelector('.gallery-item');
+    return item ? item.getBoundingClientRect().width + parseFloat(getComputedStyle(galleryRail).gap) : galleryRail.clientWidth;
+  };
+  prev.addEventListener('click', () => galleryRail.scrollBy({ left: -step(), behavior: reducedMotion.matches ? 'instant' : 'smooth' }));
+  next.addEventListener('click', () => galleryRail.scrollBy({ left: step(), behavior: reducedMotion.matches ? 'instant' : 'smooth' }));
+  let dragStart;
+  clipper.addEventListener('pointerdown', (event) => {
+    event.preventDefault();
+    dragStart = { x: event.clientX, scroll: galleryRail.scrollLeft };
+    galleryRail.classList.add('is-clipper-dragging');
+    clipper.setPointerCapture(event.pointerId);
+  });
+  clipper.addEventListener('pointermove', (event) => {
+    if (!dragStart) return;
+    const travel = track.clientWidth - clipper.clientWidth;
+    if (travel > 0) galleryRail.scrollLeft = dragStart.scroll + (event.clientX - dragStart.x) / travel * maxScroll();
+  });
+  const finishDrag = () => {
+    if (!dragStart) return;
+    dragStart = null;
+    galleryRail.classList.remove('is-clipper-dragging');
+    update();
+  };
+  clipper.addEventListener('pointerup', finishDrag);
+  clipper.addEventListener('pointercancel', finishDrag);
+  galleryRail.addEventListener('scroll', update, { passive: true });
+  window.addEventListener('resize', update);
+  update();
+}
+
 const lightbox = document.querySelector('.lightbox');
 if (lightbox) {
   const lightboxImage = lightbox.querySelector('img');
