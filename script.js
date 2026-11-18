@@ -142,6 +142,38 @@ if (galleryRail) {
   };
   clipper.addEventListener('pointerup', finishDrag);
   clipper.addEventListener('pointercancel', finishDrag);
+  // Capture on the original photo link so a stationary click still opens it.
+  let photoDrag = null;
+  galleryRail.addEventListener('pointerdown', (event) => {
+    const link = event.target.closest('[data-lightbox]');
+    if (event.pointerType !== 'mouse' || event.button !== 0 || !link) return;
+    photoDrag = { x: event.clientX, scroll: galleryRail.scrollLeft, moved: false };
+    link.setPointerCapture(event.pointerId);
+  });
+  galleryRail.addEventListener('dragstart', (event) => {
+    if (photoDrag) event.preventDefault();
+  });
+  galleryRail.addEventListener('pointermove', (event) => {
+    if (!photoDrag || event.pointerType !== 'mouse') return;
+    const delta = event.clientX - photoDrag.x;
+    if (!photoDrag.moved && Math.abs(delta) < 6) return;
+    photoDrag.moved = true;
+    galleryRail.classList.add('is-photo-dragging');
+    galleryRail.scrollLeft = photoDrag.scroll - delta;
+  });
+  let suppressPhotoClick = false;
+  galleryRail.addEventListener('lostpointercapture', () => {
+    suppressPhotoClick = Boolean(photoDrag?.moved);
+    photoDrag = null;
+    galleryRail.classList.remove('is-photo-dragging');
+    setTimeout(() => { suppressPhotoClick = false; }, 0);
+  });
+  galleryRail.addEventListener('click', (event) => {
+    if (photoDrag?.moved || suppressPhotoClick) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+  }, true);
   galleryRail.addEventListener('scroll', update, { passive: true });
   window.addEventListener('resize', update);
   update();

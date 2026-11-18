@@ -167,7 +167,7 @@ a,button{touch-action:manipulation}h1,h2,h3{text-wrap:balance}.price-row strong{
 /* A visual rail follows the native photo scroller; the rail never replaces scrolling. */
 .has-gallery-control .gallery-grid{scrollbar-width:none;padding-bottom:0}
 .has-gallery-control .gallery-grid::-webkit-scrollbar{display:none}
-.gallery-grid.is-clipper-dragging{scroll-snap-type:none}
+.gallery-grid.is-photo-dragging,.gallery-grid.is-clipper-dragging{scroll-snap-type:none}
 .gallery-control{display:flex;align-items:center;gap:8px;height:54px;margin-top:15px}
 .gallery-control[hidden]{display:none}
 .gallery-arrow{flex:0 0 32px;width:32px;height:44px;display:grid;place-items:center;border:0;background:transparent;color:var(--brass);opacity:.38;cursor:pointer;transition:opacity .2s ease}
@@ -178,9 +178,15 @@ a,button{touch-action:manipulation}h1,h2,h3{text-wrap:balance}.price-row strong{
 .gallery-arrow:focus-visible{outline:2px solid var(--brass);outline-offset:2px}
 .gallery-arrow:disabled{opacity:.22;cursor:default}
 .gallery-track{position:relative;flex:1;height:54px;min-width:0}
-.gallery-track::before{content:"";position:absolute;inset:auto 0;top:50%;height:2px;transform:translateY(-50%);border-radius:99px;background:#65513d;opacity:.42}
-.gallery-clipper{position:absolute;z-index:1;top:50%;left:0;width:clamp(76px,10vw,128px);height:auto;transform:translateY(-50%);filter:drop-shadow(0 4px 6px #0009);transition:filter .2s ease;cursor:grab;touch-action:none;user-select:none;-webkit-user-drag:none}
+.gallery-track::before{content:"";position:absolute;inset:auto 0;top:50%;height:1px;transform:translateY(-50%);border-radius:99px;background:#65513d;opacity:.42}
+.gallery-clipper{position:absolute;z-index:1;top:50%;left:0;width:clamp(72px,7vw,96px);height:auto;transform:translateY(-50%);filter:drop-shadow(0 4px 6px #0009);transition:filter .2s ease;cursor:grab;touch-action:none;user-select:none;-webkit-user-drag:none}
 @media(hover:hover){.gallery-clipper:hover{filter:drop-shadow(0 4px 6px #0009) drop-shadow(0 0 9px #c69a6266)}}
 .gallery-clipper:active{cursor:grabbing}
-@media(max-width:650px){.gallery-control{height:40px;gap:3px;margin-top:8px}.gallery-track{height:40px}.gallery-track::before{display:none}.gallery-arrow{flex-basis:24px;width:24px}.gallery-clipper{width:70px}}
+@media (max-width:650px), (hover:none) and (pointer:coarse) {
+  .gallery-control { display: none; }
+}
+@media (hover:hover) and (pointer:fine) {
+  .gallery-grid a { cursor: grab; user-select: none; }
+  .gallery-grid.is-photo-dragging a { cursor: grabbing; }
+}
 @media(prefers-reduced-motion:reduce){.gallery-clipper,.gallery-arrow{transition:none}}
