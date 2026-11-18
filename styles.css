@@ -164,12 +164,3 @@ a,button{touch-action:manipulation}h1,h2,h3{text-wrap:balance}.price-row strong{
 .gallery-hint{display:flex;justify-content:flex-end;align-items:center;gap:7px}
 .gallery-hint .tool-icon{width:16px;height:16px}
 .gallery-item img{object-position:center 40%}
-/* Preserve the native rail; on wide WebKit/Blink screens only its thumb gets an icon. */
-@media(min-width:651px){
-  @supports (-webkit-appearance:none) and (not (-moz-appearance:none)){
-    .gallery-grid{scrollbar-width:auto;scrollbar-color:auto}
-    .gallery-grid::-webkit-scrollbar{height:11px;background:#2e261d}
-    .gallery-grid::-webkit-scrollbar-track{background:#2e261d}
-    .gallery-grid::-webkit-scrollbar-thumb{border-radius:20px;background:#8c704d url('./assets/icons/razor-electric-horizontal.svg') center/28px 11px no-repeat}
-  }
-}
