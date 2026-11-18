@@ -160,3 +160,21 @@ a,button{touch-action:manipulation}h1,h2,h3{text-wrap:balance}.price-row strong{
   .about-copy>p:not(.section-label){font-size:12px;line-height:1.4}
   .about-link{font-size:10px}
 }
+
+/* The photo rail keeps native scrolling as a fallback; the clipper is its live slider. */
+.gallery-hint{display:flex;justify-content:flex-end;align-items:center;gap:7px}
+.gallery-hint .tool-icon{width:16px;height:16px}
+.gallery-item img{object-position:center 40%}
+.has-gallery-progress .gallery-grid{scrollbar-width:none;padding-bottom:0}
+.has-gallery-progress .gallery-grid::-webkit-scrollbar{display:none}
+.gallery-progress{position:relative;height:44px;margin-top:20px}
+.gallery-progress[hidden]{display:none}
+.gallery-progress-range{position:relative;z-index:2;display:block;width:100%;height:44px;margin:0;appearance:none;-webkit-appearance:none;background:transparent;cursor:grab}
+.gallery-progress-range:active{cursor:grabbing}
+.gallery-progress-range::-webkit-slider-runnable-track{height:1px;background:#775e43}
+.gallery-progress-range::-moz-range-track{height:1px;background:#775e43}
+.gallery-progress-range::-webkit-slider-thumb{appearance:none;-webkit-appearance:none;width:36px;height:36px;margin-top:-18px;border:0;background:transparent}
+.gallery-progress-range::-moz-range-thumb{width:36px;height:36px;border:0;background:transparent}
+.gallery-progress-range:focus-visible{outline:2px solid var(--brass);outline-offset:2px}
+.gallery-progress-icon{position:absolute;z-index:3;top:6px;left:18px;width:32px;height:32px;transform:translateX(-50%);background:var(--brass);-webkit-mask:url('./assets/icons/razor-electric.svg') center/contain no-repeat;mask:url('./assets/icons/razor-electric.svg') center/contain no-repeat;pointer-events:none;transition:left .12s ease-out}
+@media(prefers-reduced-motion:reduce){.gallery-progress-icon{transition:none}}
