@@ -28,6 +28,9 @@ await mkdir(resolve(output, 'en'), { recursive: true });
 await cp(resolve(root, 'assets'), resolve(output, 'assets'), { recursive: true });
 await cp(resolve(root, 'styles.css'), resolve(output, 'styles.css'));
 await cp(resolve(root, 'script.js'), resolve(output, 'script.js'));
+for (const file of ['api.js', 'api-config.js', 'booking.js', 'booking.css', 'crm']) {
+  await cp(resolve(root, file), resolve(output, file), { recursive: true });
+}
 await cp(resolve(root, '.nojekyll'), resolve(output, '.nojekyll'));
 
 for (const page of pages) {
