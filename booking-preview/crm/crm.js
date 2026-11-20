@@ -393,11 +393,18 @@ async function newBooking() {
   svc.onchange = day.onchange = loadSlots;
   submit(f, "Создать запись", (v) => {
     if (!v.start_at) throw new Error("Выберите доступное время.");
+    const name = v.name.trim();
+    if (!name) throw new Error("Введите имя клиента.");
+    let phone = v.phone.trim().replace(/[\s()–—-]/g, "");
+    if (/^[78]\d{10}$/.test(phone)) phone = "+7" + phone.slice(1);
+    else if (/^9\d{9}$/.test(phone)) phone = "+7" + phone;
+    if (!/^\+[1-9]\d{7,14}$/.test(phone))
+      throw new Error("Проверьте номер телефона. Например: 8 (900) 123-45-67 или +7 900 123-45-67.");
     return api("/admin/reserve", {
       service: Number(v.service),
       start_at: v.start_at,
-      name: v.name.trim(),
-      phone: v.phone.replace(/[\s()-]/g, ""),
+      name,
+      phone,
       token,
     });
   });
