@@ -1,3 +1,3 @@
-// For GitHub Pages set this to the HTTPS origin of the booking service.
-// On a server that serves both the site and API, leave it empty.
-export const bookingOrigin = '';
+// TatNet serves public RPCs anonymously. Other gateways can require a publishable or anon key.
+export const supabaseUrl = 'https://8805e93c2195dc92d4a36042bef2f549.supa.tatnet.cloud';
+export const supabaseAnonKey = '';

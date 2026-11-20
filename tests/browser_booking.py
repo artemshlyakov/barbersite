@@ -4,12 +4,15 @@ Run against a local static server using HABIB_PREVIEW_URL; requests are intercep
 """
 import os
 import shutil
-from urllib.parse import parse_qs, urljoin, urlparse
+from urllib.parse import urljoin, urlparse
 
 from playwright.sync_api import expect, sync_playwright
 
+from rpc_fixture import ANON_KEY, RPC_ORIGIN, configure
+
 
 def run(page, base, language):
+    key = ANON_KEY if language else ""
     submissions = []
     flags = {"error": True}
     service = dict(id=1, name_ru="Стрижка", name_en="Haircut", active=True,
@@ -18,19 +21,23 @@ def run(page, base, language):
         request = route.request
         url = urlparse(request.url)
         path = url.path
-        if path.endswith("/services"):
+        assert request.method == "POST"
+        assert request.headers.get("apikey") == (key or None)
+        assert "authorization" not in request.headers
+        if path.endswith("/habib_services"):
             return route.fulfill(json=[service])
-        if path.endswith("/slots"):
-            day = parse_qs(url.query)["day"][0]
+        if path.endswith("/habib_slots"):
+            day = request.post_data_json["day"]
             return route.fulfill(json=[{"starts_at": day + "T13:00:00+03:00"}])
-        if path.endswith("/reserve"):
+        if path.endswith("/habib_reserve"):
             submissions.append(request.post_data_json)
             if flags["error"]:
-                return route.fulfill(status=503, json={"error": "database_unavailable"})
+                return route.fulfill(status=503, json={"code": "PGRST000", "message": "database_unavailable"})
             return route.fulfill(json={"id": 123})
         raise ValueError(path)
 
-    page.route("**/api/**", respond)
+    configure(page, key)
+    page.route(RPC_ORIGIN + "/rest/v1/rpc/**", respond)
     page.goto(urljoin(base, language), wait_until="domcontentloaded")
     expect(page.locator("#booking-prices")).to_contain_text(service["name_en" if language else "name_ru"])
     page.locator("#price [data-booking]").click()
