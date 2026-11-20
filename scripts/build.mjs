@@ -14,6 +14,21 @@ if (inputUrl) {
   baseUrl = parsed.href.replace(/\/+$/, '') + '/';
 }
 
+// Reject private keys before copying the configuration into a public deployment.
+const { supabaseUrl, supabaseAnonKey } = await import('../api-config.js');
+if (supabaseUrl || supabaseAnonKey) {
+  const url = new URL(supabaseUrl);
+  const payload = supabaseAnonKey.split('.')[1] || '';
+  let role;
+  try { role = JSON.parse(Buffer.from(payload, 'base64url')).role; } catch {}
+  if (url.protocol !== 'https:' || url.search || url.hash || url.username || url.password ||
+      (supabaseAnonKey && !(supabaseAnonKey.startsWith('sb_publishable_') || role === 'anon'))) {
+    throw new Error('Use a project HTTPS URL and an anon or publishable client key.');
+  }
+} else {
+  console.warn('Project URL is missing. The preview can display the interface only.');
+}
+
 const pages = [
   { source: 'index.html', output: 'index.html', lang: 'ru', path: '' },
   { source: 'en/index.html', output: 'en/index.html', lang: 'en', path: 'en/' }
@@ -28,6 +43,9 @@ await mkdir(resolve(output, 'en'), { recursive: true });
 await cp(resolve(root, 'assets'), resolve(output, 'assets'), { recursive: true });
 await cp(resolve(root, 'styles.css'), resolve(output, 'styles.css'));
 await cp(resolve(root, 'script.js'), resolve(output, 'script.js'));
+for (const file of ['api.js', 'api-config.js', 'booking.js', 'booking.css', 'crm']) {
+  await cp(resolve(root, file), resolve(output, file), { recursive: true });
+}
 await cp(resolve(root, '.nojekyll'), resolve(output, '.nojekyll'));
 
 for (const page of pages) {

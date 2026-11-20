@@ -1,0 +1,42 @@
+html:has(.book-dialog[open]) {overflow:hidden}
+.book-dialog {box-sizing:border-box; width:min(820px,calc(100% - 24px)); max-height:calc(100dvh - 32px); margin:auto; padding:clamp(18px,4vw,42px); overflow:auto; overscroll-behavior:contain; background:var(--paper); color:var(--ink); color-scheme:light; border:1px solid #90775c;border-radius:18px; box-shadow:0 18px 70px #0007; font-family:var(--body)}
+.book-dialog::backdrop {background:rgba(15,13,10,.78)}
+.book-dialog [hidden],#price-status[hidden] {display:none}
+.book-dialog header {display:flex; justify-content:space-between; align-items:flex-start; gap:12px; margin-bottom:22px}
+.book-dialog h2 {font:500 clamp(32px,5vw,54px)/1.08 var(--display); margin:0; text-transform:uppercase}
+.book-dialog h3 {font:500 23px var(--display); margin:0 0 10px}
+.book-dialog button,.book-dialog select,.book-dialog input {font:inherit; box-sizing:border-box}
+.book-dialog button {cursor:pointer}
+.book-dialog .bk-icon,.bk-choice {color:var(--ink); border:1px solid #a9957e; background:transparent}
+.bk-icon {width:44px;height:44px;border-radius:50%;display:inline-grid;place-items:center;padding:0; font-size:22px!important}
+.book-dialog fieldset {min-width:0; border:0; padding:0; margin:0}
+.bk-layout {display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:clamp(22px,5vw,58px)}
+.bk-label {display:block;font-weight:650;margin:0 0 15px}
+.bk-label input,.bk-label select {display:block;width:100%;min-height:44px;margin-top:6px;padding:7px 9px;background:#f7f1e6;color:var(--ink);border:1px solid #94826e;border-radius:8px}
+.bk-month {display:flex;align-items:center;justify-content:space-between;margin:15px 0 6px}
+.bk-month strong {font:500 21px var(--display);text-transform:capitalize}
+.bk-month .bk-icon {border-color:transparent}
+.bk-week,.bk-dates {display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:3px;text-align:center}
+.bk-week {color:#665342;font-size:.8rem;margin:8px 0}
+.bk-dates .bk-choice {border-color:transparent;min-height:44px;padding:0;border-radius:50%;width:min(100%,44px);justify-self:center;font-variant-numeric:tabular-nums}
+.bk-choice:disabled,.bk-icon:disabled {opacity:.38;cursor:default}
+.bk-choice:not(:disabled):hover,.bk-icon:not(:disabled):hover {background:#d8c6ac}
+.bk-choice[aria-pressed=true],.bk-choice[aria-pressed=true]:hover {background:#30251b;color:white}
+.bk-times {display:grid;grid-template-columns:repeat(auto-fit,minmax(60px,1fr));gap:5px}
+.bk-times button {min-height:44px;border-radius:12px;border-color:#b7a68f;font-variant-numeric:tabular-nums}
+.bk-time-caption {margin:18px 0 8px;font-weight:650}
+.bk-msg,.bk-summary {font-size:.92rem;line-height:1.55;margin:10px 0;overflow-wrap:anywhere}
+.bk-submit,.bk-retry {font-weight:650!important;border-radius:10px;padding:11px 17px;border:1px solid #342b22; background:#342b22;color:#fff}
+.bk-submit:disabled {opacity:.5;cursor:default}
+.bk-contact {font-size:.9rem;line-height:1.7}.bk-contact a {text-decoration:underline}
+.book-dialog :focus-visible {outline:3px solid #935422;outline-offset:2px}
+.price-row small {display:block;font:400 .84rem/1.45 var(--body);margin:5px 0;color:#594838;overflow-wrap:anywhere}
+#booking-prices h3 {overflow-wrap:anywhere}
+#booking-prices + .price-disclaimer[hidden] + a {margin-top:22px}
+@media(max-width:650px){.bk-layout{display:block}.bk-details{margin-top:22px}.book-dialog{max-height:calc(100dvh - 16px)}}
+
+@media (prefers-reduced-motion:no-preference) {
+  .book-dialog[open] {animation:book-open .18s ease-out}
+  .book-dialog button {transition:background-color .14s,color .14s,border-color .14s}
+}
+@keyframes book-open {from {opacity:0;transform:translateY(5px)} to {opacity:1;transform:none}}

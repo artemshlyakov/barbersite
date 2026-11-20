@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="robots" content="noindex,nofollow" />
+    <title>Кабинет Хабиба — HABIB BARBER</title>
+    <link rel="icon" href="../assets/favicon.svg" />
+    <link rel="stylesheet" href="crm.css" />
+    <script type="module" src="crm.js"></script>
+  </head>
+  <body>
+    <a class="skip" href="#main">Перейти к содержимому</a>
+    <header>
+      <a class="brand" href="../">HABIB <span>BARBER</span></a
+      ><span>Кабинет мастера</span><button id="logout" hidden>Выйти</button>
+    </header>
+    <main id="main">
+      <section id="gate" class="gate">
+        <h1>Вход для мастера</h1>
+        <form id="login">
+          <label>Логин или электронная почта<input required type="text" name="login" autocomplete="username" autocapitalize="none" spellcheck="false" /></label>
+          <label
+            >Пароль<input
+              required
+              type="password"
+              name="password"
+              autocomplete="current-password" /></label
+          ><button class="primary">Войти</button>
+        </form>
+      </section>
+      <section id="workspace" hidden>
+        <nav aria-label="Разделы кабинета">
+          <button data-tab="calendar">Календарь</button
+          ><button data-tab="clients">Клиенты</button
+          ><button data-tab="schedule">Расписание</button
+          ><button data-tab="services">Прайс</button>
+        </nav>
+        <div class="heading">
+          <h1 id="title">Календарь</h1>
+          <button id="action" class="primary" hidden></button>
+        </div>
+        <div id="period" class="toolbar">
+          <div class="date-controls">
+            <button id="prev" aria-label="Предыдущий период">←</button
+            ><label
+              ><span class="sr">Дата</span
+              ><input type="date" id="date" required /></label
+            ><button id="next" aria-label="Следующий период">→</button>
+          </div>
+          <button id="today">Сегодня</button
+          ><button id="range" aria-pressed="false">Неделя</button
+          ><small>Время московское</small>
+        </div>
+        <label id="searchLabel" hidden
+          >Поиск по имени или телефону<input
+            id="search"
+            type="search"
+            autocomplete="off"
+        /></label>
+        <p id="sync" role="status"></p>
+        <div id="view"></div>
+      </section>
+      <p id="notice" role="alert"></p>
+    </main>
+    <dialog aria-labelledby="dialogTitle">
+      <div class="dialog-top">
+        <h2 id="dialogTitle"></h2>
+        <button type="button" aria-label="Закрыть" id="close">×</button>
+      </div>
+      <div id="editor"></div>
+      <p id="dialogError" role="alert"></p>
+    </dialog>
+  </body>
+</html>
