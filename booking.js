@@ -7,7 +7,8 @@ const zone = 'Europe/Moscow';
 const dayKey = new Intl.DateTimeFormat('sv-SE', { timeZone: zone, year: 'numeric', month: '2-digit', day: '2-digit' });
 const dayLabel = new Intl.DateTimeFormat(locale, { dateStyle: 'long', timeZone: 'UTC' });
 const clock = new Intl.DateTimeFormat(locale, { timeZone: zone, hour: '2-digit', minute: '2-digit', hourCycle:'h23' });
-const money = value => new Intl.NumberFormat(locale).format(value) + ' ₽';
+const currencyFormatter = new Intl.NumberFormat(locale, { maximumFractionDigits: 0 });
+const money = value => currencyFormatter.format(value) + ' ₽';
 const title = item => en ? item.name_en : item.name_ru;
 const el = (tag, text, className) => {
   const node = document.createElement(tag);
@@ -91,18 +92,63 @@ function summary() {
   $('.bk-summary').textContent = item ? [title(item),serviceDetails(item),dayLabel.format(dateOf(day)),start && clock.format(new Date(start))].filter(Boolean).join(' · ') : pickService;
   $('.bk-submit').disabled = busy || !item || !start;
 }
+// Keep only the last price seen for each service in this tab. Both languages share the same catalogue.
+const seenKey = 'habib.booking.prices.v1';
+let seenPrices = new Map();
+try { seenPrices = new Map(JSON.parse(sessionStorage.getItem(seenKey) || '[]')); } catch { /* Storage may be disabled. */ }
+function rememberPrice(id, price) {
+  seenPrices.set(id, price);
+  try { sessionStorage.setItem(seenKey, JSON.stringify([...seenPrices])); } catch { /* In-memory state still works. */ }
+}
+
+const motion = matchMedia('(prefers-reduced-motion: reduce)');
+const priceContainer = document.getElementById('booking-prices');
+let catalogueSignature = null;
+const priceObserver = 'IntersectionObserver' in window ? new IntersectionObserver(entries => {
+  for (const {target, isIntersecting, intersectionRatio} of entries) {
+    if (!isIntersecting || intersectionRatio < 0.3 || !target.isConnected) continue;
+    priceObserver.unobserve(target);
+    const id = target.dataset.serviceId;
+    const price = Number(target.dataset.priceCount);
+    if (seenPrices.get(id) === price) continue;
+    rememberPrice(id, price);
+    if (!price || motion.matches) continue;
+    target.textContent = money(0);
+    const started = performance.now();
+    const update = now => {
+      if (!target.isConnected) return;
+      const progress = motion.matches ? 1 : Math.max(0, Math.min((now - started) / 1400, 1));
+      const eased = 1 - (1 - progress) ** 3;
+      target.textContent = money(Math.round(price * eased));
+      if (progress < 1) requestAnimationFrame(update);
+    };
+    requestAnimationFrame(update);
+  }
+}, {threshold: 0.3}) : null;
+
 function renderPrices() {
-  const rows = services.map(item => {
-    const row = el('div',null,'price-row');
-    const info = el('div');
-    info.append(el('h3',title(item)));
-    const description = en ? item.description_en : item.description_ru;
-    info.append(el('small',[item.minutes+tr(' мин',' min'),description].filter(Boolean).join(' · ')));
-    row.append(info,el('strong',money(item.price)));
-    return row;
-  });
-  document.getElementById('booking-prices').replaceChildren(...rows);
-  priceStatus.hidden = rows.length > 0;
+  const signature = JSON.stringify(services.map(item => [
+    item.id, title(item), en ? item.description_en : item.description_ru, item.minutes, item.price
+  ]));
+  if (signature !== catalogueSignature) {
+    catalogueSignature = signature;
+    priceObserver?.disconnect();
+    const rows = services.map(item => {
+      const row = el('div',null,'price-row');
+      const info = el('div');
+      info.append(el('h3',title(item)));
+      const description = en ? item.description_en : item.description_ru;
+      info.append(el('small',[item.minutes+tr(' мин',' min'),description].filter(Boolean).join(' · ')));
+      const amount = el('strong',money(item.price));
+      amount.dataset.priceCount = item.price;
+      amount.dataset.serviceId = item.id;
+      if (seenPrices.get(String(item.id)) !== item.price) priceObserver?.observe(amount);
+      row.append(info,amount);
+      return row;
+    });
+    priceContainer.replaceChildren(...rows);
+  }
+  priceStatus.hidden = services.length > 0;
   priceStatus.textContent = noServices;
 }
 async function catalogue() {
@@ -122,7 +168,9 @@ async function catalogue() {
     if (version!==catalogueVersion) return;
     services = [];
     select.replaceChildren(new Option(pickService,''));
-    document.getElementById('booking-prices').replaceChildren();
+    priceObserver?.disconnect();
+    catalogueSignature = null;
+    priceContainer.replaceChildren();
     priceStatus.hidden = false;
     priceStatus.textContent = tr('Актуальный прайс временно недоступен. Уточните цену у Хабиба.','Live prices are temporarily unavailable. Please contact Habib for prices.');
     result.textContent = loadError;

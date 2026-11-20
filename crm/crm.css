@@ -78,6 +78,28 @@ nav,
   gap: 8px;
   flex-wrap: wrap;
 }
+.date-controls {
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr) 44px;
+  align-items: stretch;
+  width: 17rem;
+  max-width: 100%;
+}
+.date-controls label, .date-controls input {
+  min-width: 0;
+}
+.date-controls button, #close {
+  display: grid;
+  place-content: center;
+  inline-size: 44px;
+  padding: 0;
+  font: 22px/1 system-ui, sans-serif;
+}
+.date-controls input {
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.25;
+}
 nav {
   border-bottom: 1px solid #bcae98;
   padding-bottom: 14px;
@@ -111,7 +133,7 @@ select,
 textarea {
   font: inherit;
   border: 1px solid #a59580;
-  border-radius: 4px;
+  border-radius: 5px;
   padding: 9px 12px;
   min-height: 44px;
   max-width: 100%;
@@ -122,8 +144,19 @@ button {
   cursor: pointer;
   touch-action: manipulation;
 }
-button:hover {
-  background: #e1d2bc;
+button {
+  transition: background-color 140ms ease, border-color 140ms ease, transform 100ms ease;
+}
+@media (hover:hover) {
+  button:not(:disabled):hover { background: #e1d2bc; border-color: #705b42; }
+  button.primary:not(:disabled):hover, button[aria-current="page"]:hover,
+  button[aria-pressed="true"]:hover { background: #4d3f30; color: #fff9ef; }
+  header button:not(:disabled):hover { background: #3e3328; color: #fff9ef; }
+}
+button:not(:disabled):active { transform: translateY(1px); }
+@media (prefers-reduced-motion:reduce) {
+  button { transition: none; }
+  button:not(:disabled):active { transform: none; }
 }
 button.primary,
 button[aria-current="page"],
@@ -143,6 +176,8 @@ textarea {
   width: 100%;
 }
 label {
+  min-width: 0;
+  grid-template-columns: minmax(0,1fr);
   display: grid;
   gap: 5px;
   font-weight: 600;
@@ -156,6 +191,8 @@ label {
 }
 .gate form,
 dialog form {
+  min-width: 0;
+  grid-template-columns: minmax(0,1fr);
   display: grid;
   gap: 16px;
 }
@@ -174,6 +211,7 @@ dialog form {
 }
 .entry p {
   margin: 2px 0;
+  color: #695949;
 }
 .entry strong {
   font-size: 17px;
@@ -232,10 +270,14 @@ small,
   display: flex;
   align-items: center;
   gap: 10px;
+  min-height: 44px;
 }
 .check input {
   width: auto;
   min-height: auto;
+  inline-size: 19px;
+  block-size: 19px;
+  accent-color: #423427;
 }
 dialog {
   background: #f5eddf;
@@ -246,15 +288,19 @@ dialog {
   width: min(490px, calc(100vw - 24px));
   max-height: 88dvh;
   overflow: auto;
+  overscroll-behavior: contain;
+  box-shadow: 0 16px 60px #21170d38;
 }
 dialog::backdrop {
   background: #1d1712b5;
 }
 dialog h2 {
   margin: 0;
-  max-width: 80%;
+  overflow-wrap: anywhere;
 }
 .dialog-top {
+  display: grid;
+  grid-template-columns: minmax(0,1fr) 44px;
   margin-bottom: 20px;
 }
 a {
@@ -281,10 +327,23 @@ a {
   header > span {
     font-size: 11px;
   }
-  .toolbar small {
-    width: 100%;
-    margin: 0;
+  .toolbar {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: stretch;
+    gap: 8px;
   }
+  .date-controls {
+    width: 100%;
+    grid-column: 1 / -1;
+  }
+  .toolbar small { grid-column: 1 / -1; margin: 0; }
+  input, select, textarea { font-size: 16px; min-width: 0; }
+  .heading { column-gap: 12px; }
+  .entry .badge { justify-self: start; width: fit-content; }
+  dialog { padding: 18px; }
+  #view button, #editor button { overflow-wrap: anywhere; }
+  #view .list-button { min-height: 48px; }
   nav {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -321,3 +380,9 @@ a {
 .skip:focus {
   transform: none;
 }
+
+#editor > button, #editor > form + button, #editor > form:not(:first-child) {
+  margin-top: 12px;
+}
+#notice:empty, #dialogError:empty { margin: 0; }
+#searchLabel { max-width: 35rem; }
