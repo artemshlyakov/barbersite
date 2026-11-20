@@ -43,13 +43,17 @@ let tab = "calendar",
   rendering = 0,
   modalVersion = 0;
 const errors = {
-  unauthorized: "Не удалось войти. Проверьте почту и пароль.",
+  unauthorized: "Не удалось войти. Проверьте логин и пароль.",
   forbidden: "Эта учётная запись не имеет доступа к кабинету мастера.",
   not_configured: "Подключение к базе пока не настроено.",
   database_unavailable:
     "База временно недоступна. Обновите календарь перед повторной попыткой.",
   invalid_booking:
     "Проверьте телефон и укажите международный код, например +7.",
+  invalid_input: "Проверьте введённые данные.",
+  invalid_service: "Проверьте название, стоимость и длительность услуги.",
+  invalid_status: "Проверьте выбранный статус записи.",
+  invalid_day: "Проверьте дату и доступность дня.",
   invalid_number: "Проверьте числовые значения.",
   invalid_text: "Проверьте длину и содержимое полей.",
   invalid_time: "Проверьте время.",
@@ -65,7 +69,7 @@ const errors = {
   "request key reused": "Параметры заявки изменились. Откройте новую форму.",
 };
 const report = (e) => {
-  if (e.status === 401 && logged) return showLogin();
+  if (logged && [401,403].includes(e.status)) showLogin();
   (dialog.open ? $("dialogError") : $("notice")).textContent =
     errors[e.code] ||
     (/^[А-ЯЁ]/.test(e.message)
@@ -179,8 +183,13 @@ $("login").onsubmit = async (e) => {
     b = f.querySelector("button");
   b.disabled = true;
   try {
-    await api("/login", { email: f.email.value.trim(), password: f.password.value });
-    await api("/admin/days?day=" + $("date").value + "&days=1");
+    await api("/login", { login: f.elements.login.value.trim(), password: f.password.value });
+    try {
+      await api("/admin/days?day=" + $("date").value + "&days=1");
+    } catch (error) {
+      await api("/logout", {}).catch(() => {});
+      throw error;
+    }
     f.reset();
     showDesk();
     await refresh();

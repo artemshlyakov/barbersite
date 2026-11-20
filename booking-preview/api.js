@@ -18,7 +18,7 @@ function publicKey(key) {
 }
 
 function gateway() {
-  if (!supabaseUrl || !publicKey(supabaseAnonKey)) throw failure(503, 'not_configured');
+  if (!supabaseUrl || (supabaseAnonKey && !publicKey(supabaseAnonKey))) throw failure(503, 'not_configured');
   const url = new URL(supabaseUrl);
   const local = ['localhost', '127.0.0.1', '[::1]'].includes(url.hostname);
   if (url.username || url.password || url.search || url.hash || !(url.protocol === 'https:' || (local && url.protocol === 'http:'))) {
@@ -34,18 +34,21 @@ function responseError(response, data, path) {
   if (response.status === 429 || data?.code === 'PT429' || ['phone limit','rate limit','too many requests'].includes(message))
     return failure(429, message === 'phone limit' ? message : 'too_many_requests');
   if (bookingConflicts.has(message)) return failure(409, message);
-  if (['23503','23505','23P01','23514'].includes(data?.code)) return failure(409, 'conflict');
+  if (response.status === 409 || ['23503','23505','23P01','23514'].includes(data?.code)) return failure(409, 'conflict');
   if (path.startsWith('/auth/') && [400,401,403].includes(response.status)) return failure(401, 'unauthorized');
   if (response.status === 401 || data?.code === 'PGRST301') return failure(401, 'unauthorized');
   if (response.status === 403 || data?.code === '42501') return failure(403, 'forbidden');
+  if (data?.code === 'PT404') return failure(404, 'not_found');
+  if (data?.code === 'PT400') return failure(400, /^invalid_[a-z]+$/.test(message) ? message : 'invalid_input');
   if (data?.code?.startsWith('22') || message === 'invalid_booking') return failure(400, 'invalid_booking');
   return failure(response.status, 'database_unavailable');
 }
 
 async function request(path, body, accessToken) {
-  const headers = { apikey: supabaseAnonKey, 'Content-Type': 'application/json' };
+  const headers = { 'Content-Type': 'application/json' };
+  if (supabaseAnonKey) headers.apikey = supabaseAnonKey;
   if (accessToken) headers.Authorization = 'Bearer ' + accessToken;
-  else if (!supabaseAnonKey.startsWith('sb_publishable_')) headers.Authorization = 'Bearer ' + supabaseAnonKey;
+  else if (supabaseAnonKey && !supabaseAnonKey.startsWith('sb_publishable_')) headers.Authorization = 'Bearer ' + supabaseAnonKey;
   const response = await fetch(gateway() + path, {
     method: 'POST', credentials: 'omit', redirect: 'error', cache: 'no-store',
     headers, body: JSON.stringify(body), signal: AbortSignal.timeout(REQUEST_TIMEOUT),
@@ -100,7 +103,9 @@ export async function api(path, body) {
     case '/login': {
       const version = ++authVersion;
       session = refreshing = null;
-      const data = await request('/auth/v1/token?grant_type=password', { email: body.email, password: body.password });
+      const login = body.login.trim();
+      const email = login === 'habib_admin' ? 'habib_admin@example.invalid' : login;
+      const data = await request('/auth/v1/token?grant_type=password', { email, password: body.password });
       saveSession(data, version);
       return;
     }
