@@ -386,3 +386,6 @@ a {
 }
 #notice:empty, #dialogError:empty { margin: 0; }
 #searchLabel { max-width: 35rem; }
+
+/* Allow scrolling along either axis without page zoom gestures. */
+html, body, dialog { touch-action: pan-x pan-y; }
