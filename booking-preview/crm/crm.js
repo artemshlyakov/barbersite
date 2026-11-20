@@ -280,12 +280,15 @@ function unblock(r) {
   );
   submit(f, "Освободить время", () => api("/admin/unblock", { id: r.id }));
 }
+function phoneLink(phone) {
+  const link = el("a", phone);
+  link.href = "tel:" + phone;
+  return link;
+}
 async function clientCard(r) {
   const box = open(r.name),
     rev = modalVersion;
-  const contact = el("a", r.phone);
-  contact.href = "tel:" + r.phone;
-  box.append(contact, el("h3", "История записей"));
+  box.append(phoneLink(r.phone), el("h3", "История записей"));
   const rows = await api(
     "/admin/history?client=" + encodeURIComponent(r.client_id || r.id),
   );
@@ -303,9 +306,12 @@ function appointment(r) {
         "–" +
         timeOf(r.end_at),
     );
+  const contact = el("p", "Телефон: ");
+  contact.append(phoneLink(r.phone));
   box.append(
     line,
     el("p", r.booked_name_ru + " · " + r.booked_price + " ₽"),
+    contact,
     button("Карточка клиента", () => clientCard(r)),
   );
   if (["declined", "cancelled"].includes(r.status)) {
