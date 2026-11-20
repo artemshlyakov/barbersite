@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 80" fill="none">
+  <defs>
+    <linearGradient id="brass" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#f7d7a0"/><stop offset=".22" stop-color="#9b6a34"/><stop offset=".48" stop-color="#e4b66f"/><stop offset=".78" stop-color="#76502c"/><stop offset="1" stop-color="#e2b879"/></linearGradient>
+    <linearGradient id="grip" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#35302b"/><stop offset=".48" stop-color="#0e0e0d"/><stop offset="1" stop-color="#3c3026"/></linearGradient>
+    <filter id="shadow" x="-20%" y="-40%" width="140%" height="190%"><feGaussianBlur stdDeviation="4"/></filter>
+  </defs>
+  <ellipse cx="121" cy="70" rx="104" ry="5" fill="#000" opacity=".48" filter="url(#shadow)"/>
+  <path d="M20 29h23l13-10h130q22 0 27 19v5q-5 19-27 19H56L43 52H20q-12 0-12-11t12-12Z" fill="url(#brass)" stroke="#4e311b" stroke-width="3"/>
+  <path d="M17 35h31l12-10h124q15 0 17 14v4q-2 14-17 14H60L48 47H17q-5 0-5-6t5-6Z" fill="#4c3020" stroke="#f6d29a" stroke-width="1.5"/>
+  <path d="M59 27h123q14 0 16 13v2q-2 13-16 13H59q-11-2-11-14t11-14Z" fill="url(#grip)" stroke="#bd8547" stroke-width="2"/>
+  <path d="M63 29h118" stroke="#c39a66" stroke-opacity=".55" stroke-width="1.5"/>
+  <path d="M65 52h115" stroke="#0a0908" stroke-opacity=".8" stroke-width="2"/>
+  <circle cx="178" cy="41" r="6" fill="#d9ad70" stroke="#4b3019" stroke-width="2"/><circle cx="178" cy="41" r="2" fill="#38261a"/>
+  <path d="M201 26h15v30h-15z" fill="url(#brass)" stroke="#4d311b" stroke-width="2"/>
+  <path d="M216 25h8v32h-8z" fill="#b7b2a7" stroke="#423e39" stroke-width="1.5"/>
+  <path d="M225 25v32m3-32v32m3-32v32m3-32v32" stroke="#d5d3cc" stroke-width="2"/>
+  <path d="M225 27h11M225 54h11" stroke="#4a4844" stroke-width="2"/>
+  <path d="M39 27c6-12 15-15 25-13" stroke="#d3a165" stroke-width="3" stroke-linecap="round"/>
+  <path d="M39 27c4-4 8-5 12-5" stroke="#ffe0a7" stroke-width="1" stroke-linecap="round"/>
+</svg>
